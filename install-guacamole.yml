@@ -42,6 +42,11 @@
 
       - debug: var=update
 
+      # pull in our vars
+      - include_vars:
+          dir: "vars"
+          depth: 1
+
       - name: "Install Guacamole library requirements"
         apt:
           name: "{{ item }}"
