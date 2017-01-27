@@ -6,7 +6,10 @@
 # Install Guacamole
 #
 # v1.0 - 07 Jan 2017 - Nicholas Cross / Mohclips - initial release
+# v1.1 - 27 Jan 2017 - Nicholas Cross / Mohclips - added playbook dir for templates, include vars always
 #
+
+# TODO : use tags
 
 - name: "Install Guacamole on the jumpservers"
 
@@ -31,6 +34,16 @@
 
   tasks:
 
+    # pull in our vars
+    - include_vars:
+        dir: "vars"
+        depth: 1
+
+   
+    - name: "Get playbook absolute path"
+      debug: msg="We are running in {{ playbook_dir }}"
+       
+
     # Apt
     - block:
 
@@ -41,11 +54,6 @@
         register: update
 
       - debug: var=update
-
-      # pull in our vars
-      - include_vars:
-          dir: "vars"
-          depth: 1
 
       - name: "Install Guacamole library requirements"
         apt:
@@ -221,7 +229,7 @@
 
       - name: "create update admin password sql"
         template:
-          src: "templates/guacamole_admin_change.sql.j2"
+          src: "{{ playbook_dir }}/templates/guacamole_admin_change.sql.j2"
           dest: "{{ guacamole.source_code_path }}/guacamole_admin_change.sql"
           owner: root
           group: root
@@ -278,7 +286,7 @@
 
       - name: "Guacamole Properties upload"
         template:
-          src: templates/guacamole.properties.j2
+          src: "{{ playbook_dir }}/templates/guacamole.properties.j2"
           dest: /etc/guacamole/guacamole.properties
           owner: root
           group: root
@@ -310,7 +318,7 @@
 
         - name: "server.xml upload"
           template:
-            src: templates/server.xml.j2
+            src: "{{ playbook_dir }}/templates/server.xml.j2"
             dest: /etc/tomcat7/server.xml
             owner: root
             group: root
