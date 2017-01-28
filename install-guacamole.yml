@@ -14,8 +14,7 @@
 
 - name: "Install Guacamole on the jumpservers"
 
-  hosts: localhost
-#  connection: ssh
+  hosts: jumpservers
   gather_facts: yes
 
   become: yes
@@ -242,7 +241,6 @@
           owner: root
           group: root
           mode: 0600
-        delegate_to: "{{ '127.0.0.1' if inventory_hostname == 'localhost' else omit }}"
 
       - name: "update admin user and pass"
         mysql_db:
@@ -300,7 +298,6 @@
           owner: root
           group: root
           mode: 0644
-        delegate_to: "{{ '127.0.0.1' if inventory_hostname == 'localhost' else omit }}"
         notify:
           - restart_guacd
           - restart_tomcat
@@ -333,7 +330,6 @@
             owner: root
             group: root
             mode: 0644
-          delegate_to: "{{ '127.0.0.1' if inventory_hostname == 'localhost' else omit }}"
 
         - name: "HTTP only cookies in context.xml"  
           lineinfile:
