@@ -14,7 +14,7 @@
 
 - name: "Install Guacamole on the jumpservers"
 
-  hosts: all
+  hosts: localhost
 #  connection: ssh
   gather_facts: yes
 
